@@ -37,7 +37,8 @@ const userSchema = new mongoose.Schema({
     email: String,
     password: String,
     googleId: String,
-    githubId: String
+    githubId: String,
+    secret: Array
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -62,7 +63,7 @@ passport.use(new GoogleStrategy({
         callbackURL: "http://localhost:3000/auth/google/secrets"
     },
     function(accessToken, refreshToken, profile, cb) {
-        console.log(profile);
+        // console.log(profile);
         User.findOrCreate({ googleId: profile.id }, function(err, user) {
             return cb(err, user);
         });
@@ -75,16 +76,12 @@ passport.use(new GitHubStrategy({
         callbackURL: "http://localhost:3000/auth/github/secrets"
     },
     function(accessToken, refreshToken, profile, done) {
-        console.log(profile);
+        // console.log(profile);
         User.findOrCreate({ githubId: profile.id }, function(err, user) {
             return done(err, user);
         });
     }
 ));
-
-app.get("/", (req, res) => {
-    res.render("home")
-})
 
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['profile'] }));
@@ -104,45 +101,100 @@ app.get('/auth/github/secrets',
         res.redirect('/secrets');
     });
 
-app.get("/login", (req, res) => {
-    res.render("login")
+app.get("/", (req, res) => {
+    res.render("home")
 })
 
-app.get("/register", (req, res) => {
-    res.render("register")
-})
+app.route("/login")
+    .get((req, res) => {
+        res.render("login")
+    })
+    .post(passport.authenticate("local"), (req, res) => {
+        res.redirect("/secrets");
+    });
+
+app.route("/register")
+    .get((req, res) => {
+        res.render("register")
+    })
+    .post((req, res) => {
+        User.register({ username: req.body.username }, req.body.password, (err, user) => {
+            if (err) {
+                console.log(err);
+                res.redirect("/register");
+            } else {
+                passport.authenticate("local")(req, res, () => {
+                    res.redirect("/secrets");
+                })
+            }
+        })
+    });
+
+app.route("/submit")
+    .get((req, res) => {
+        if (req.isAuthenticated()) {
+            User.findById(req.user.id, (err, foundUser) => {
+                if (foundUser) {
+                    res.render("submit", { secrets: foundUser.secret })
+                }
+            })
+        } else {
+            res.redirect("/login");
+        }
+    })
+    .post((req, res) => {
+        const submittedSecret = req.body.secret;
+        // console.log(req.user.id)
+
+        if (req.isAuthenticated()) {
+            User.findById(req.user.id, (err, foundUser) => {
+                foundUser.secret.push(submittedSecret);
+                foundUser.save(() => {
+                    res.redirect("/secrets");
+                })
+            })
+        } else {
+            res.redirect("/login");
+        }
+    });
+
+app.get("/secrets", (req, res) => {
+    if (req.isAuthenticated()) {
+        User.find({ "secret": { $ne: null } }, (err, foundUser) => {
+            if (!err) {
+                if (foundUser) {
+                    res.render("secrets", { usersWithSecret: foundUser });
+                } else {
+                    console.log(err)
+                }
+            } else {
+                console.log(err);
+            }
+        })
+    } else {
+        res.redirect("/login");
+    }
+});
 
 app.get("/logout", (req, res) => {
     req.logout();
     res.redirect("/");
 })
 
-app.get("/secrets", (req, res) => {
+app.post("/submit/delete", function(req, res) {
     if (req.isAuthenticated()) {
-        res.render("secrets");
+        User.findById(req.user.id, function(err, foundUser) {
+            foundUser.secret.splice(foundUser.secret.indexOf(req.body.secret), 1);
+            foundUser.save(function(err) {
+                if (!err) {
+                    res.redirect("/submit");
+                }
+            });
+        });
     } else {
         res.redirect("/login");
     }
 });
-
-app.post("/register", (req, res) => {
-    User.register({ username: req.body.username }, req.body.password, (err, user) => {
-        if (err) {
-            console.log(err);
-            res.redirect("/register");
-        } else {
-            passport.authenticate("local")(req, res, () => {
-                res.redirect("/secrets");
-            })
-        }
-    })
-});
-
-app.post("/login", passport.authenticate("local"), (req, res) => {
-    res.redirect("/secrets");
-});
-
-
 
 app.listen(process.env.PORT || 3000, () => {
     console.log("Server is running at port 3000");

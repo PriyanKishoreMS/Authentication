@@ -1,6 +1,5 @@
-
 body {
-  background-color: #E8ECEF;
+    background-color: #E8ECEF;
 }
 
 .centered {
@@ -9,8 +8,76 @@ body {
 }
 
 .secret-text {
-  text-align: center;
-  font-size: 2rem;
-  color: #fff;
-  background-color: #000;
+    text-align: center;
+    align-items: center;
+    font-size: 2rem;
+    color: #fff;
+    background-color: #000;
+    padding-bottom: 2px;
+}
+
+.submit-page {
+    padding-top: 64px;
+}
+
+
+/* .container.mt-5 {
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    width: 60%;
+    max-width: 450px;
+    text-align: center;
+    position: relative;
+    padding: 10px 5px;
+    box-shadow: 0 30px 60px 0;
+} */
+
+.lead {
+    font-size: 1.75rem;
+}
+
+.oauth {
+    margin-top: 1rem;
+}
+
+.errspan {
+    float: left;
+    margin-left: 10px;
+    margin-top: -26px;
+    position: relative;
+    z-index: 2;
+}
+
+.field {
+    padding-left: 2rem;
+}
+
+.button {
+    width: 100%;
+}
+
+.home-button {
+    width: 20%;
+}
+
+.log {
+    padding-top: 5rem;
+    padding-left: 0;
+}
+
+.back {
+    vertical-align: top;
+}
+
+.submit-button {
+    /* margin-top: 1.5rem; */
+    width: 49.7%;
+}
+
+.your-secret {
+    margin-top: 4rem;
+}
+
+.your-secret-1 {
+    margin: 1rem;
 }

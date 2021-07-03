@@ -1,20 +1,36 @@
 <%- include('partials/header') %>
 
-<div class="container">
-  <div class="jumbotron centered">
-    <i class="fas fa-key fa-6x"></i>
-    <h1 class="display-3">Secrets</h1>
-    <p class="secret-text">Don't keep your secrets, share them anonymously!</p>
+    <div class="container">
+        <div class="jumbotron submit-page centered">
+            <i class="fas fa-key fa-6x"></i>
+            <h1 class="your-secret-1 display-3">Secrets</h1>
+            <p class="secret-text">Don't keep your secrets, share them anonymously!</p>
 
-    <form action="/submit" method="POST">
+            <form action="/submit" method="POST">
 
-      <div class="form-group">
-        <input type="text" class="form-control text-center" name="secret" placeholder="What's your secret?">
-      </div>
-      <button type="submit" class="btn btn-dark">Submit</button>
-    </form>
+                <div class="form-group">
+                    <input type="text" autocomplete="off" autofocus class="form-control text-center" name="secret" placeholder="What's your secret?">
+                </div>
+                <button type="submit" class="btn btn-dark submit-button">Submit</button>
+                <a class="btn btn-outline-dark submit-button back" href="/secrets" role="button">Back</a>
+            </form>
+
+            <% if(secrets.length != 0){ %>
+                <hr>
+                <h1 class="your-secret display-3">Your Secrets</h1>
+                <form action="/submit/delete" method="post">
+                    <div class="form-group">
+                        <select class="form-control text-center" name="secret">
+              <% secrets.forEach(function(secret){ %>
+                <option value="<%= secret %>"><%= secret %></option>
+              <% }); %>
+            </select>
+                    </div>
+                    <button type="submit" class="btn btn-danger button">Delete Secret</button>
+                </form>
+                <%  } %>
 
 
-  </div>
-</div>
-<%- include('partials/footer') %>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
