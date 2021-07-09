@@ -1,5 +1,10 @@
 body {
-    background-color: #E8ECEF;
+    background: #8e9eab;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #eef2f3, #8e9eab);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #eef2f3, #8e9eab);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .centered {
@@ -7,13 +12,20 @@ body {
     text-align: center;
 }
 
+.jumbotron {
+    background-color: transparent;
+}
+
 .secret-text {
     text-align: center;
     align-items: center;
     font-size: 2rem;
     color: #fff;
-    background-color: #000;
+    background-color: #111;
+    border-radius: 5px;
     padding-bottom: 2px;
+    opacity: 0.5;
+    font-weight: 100;
 }
 
 .submit-page {
@@ -36,6 +48,13 @@ body {
     font-size: 1.75rem;
 }
 
+.card {
+    background-color: transparent;
+    box-shadow: 10px 10px 7px -1px rgba(0, 0, 0, 0.41);
+    -webkit-box-shadow: 10px 10px 7px -1px rgba(0, 0, 0, 0.41);
+    -moz-box-shadow: 10px 10px 7px -1px rgba(0, 0, 0, 0.41);
+}
+
 .oauth {
     margin-top: 1rem;
 }
@@ -46,6 +65,16 @@ body {
     margin-top: -26px;
     position: relative;
     z-index: 2;
+}
+
+.eyespan {
+    float: right;
+    margin-right: 15px;
+    margin-top: -26px;
+    position: relative;
+    z-index: 2;
+    color: #999;
+    cursor: pointer;
 }
 
 .field {
@@ -60,13 +89,26 @@ body {
     width: 20%;
 }
 
-.log {
-    padding-top: 5rem;
-    padding-left: 0;
+.sign {
+    margin-top: 1.2rem;
+    text-align: center;
+    font-weight: inherit;
 }
 
-.back {
-    vertical-align: top;
+.log {
+    padding-top: 5rem;
+}
+
+.back-home {
+    font-size: 2rem;
+    color: #333;
+    position: relative;
+    left: 5rem;
+    top: 2.5rem;
+}
+
+.back-home:hover {
+    color: #777;
 }
 
 .submit-button {
@@ -80,4 +122,20 @@ body {
 
 .your-secret-1 {
     margin: 1rem;
+}
+
+@media(max-width: 540px) {
+    .home-button,
+    .submit-button,
+    .button {
+        width: auto;
+    }
+}
+
+@media(max-width: 640px) {
+    .back-home {
+        position: relative;
+        left: 1rem;
+        top: 1rem;
+    }
 }
